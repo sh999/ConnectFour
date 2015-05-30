@@ -1,7 +1,10 @@
 var fieldStatus = [
-	["empty","empty","empty"],
-	["empty","empty","empty"],
-	["empty","empty","empty"]
+	["empty","empty","empty","empty","empty","empty","empty"],
+	["empty","empty","empty","empty","empty","empty","empty"],
+	["empty","empty","empty","empty","empty","empty","empty"],
+	["empty","empty","empty","empty","empty","empty","empty"],
+	["empty","empty","empty","empty","empty","empty","empty"],
+	["empty","empty","empty","empty","empty","empty","empty"],
 ];
 
 var turn = {
@@ -28,13 +31,12 @@ function colorCell(cell){
 	else{
 		$(cell).addClass("blue");
 	}
-
 	$(cell).addClass("clicked");	// Figure out how to drop piece in correct cell
 	fieldStatus[row][col] = "filled";
 }
 
 function getFreeCell(cell){
-	var row = 2;
+	var row = fieldStatus.length-1;
 	var col = $(cell).data("col");
 	for(i = 0; i <= 2; i++){
 		if(fieldStatus[row][col] === "filled"){
