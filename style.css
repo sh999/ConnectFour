@@ -9,6 +9,10 @@
 	background-color: #aaa;
 }
 
-.clicked {
+.red {
 	background-color: red;
+}
+
+.blue {
+	background-color: blue;
 }
