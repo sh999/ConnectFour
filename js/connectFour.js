@@ -37,13 +37,19 @@ function colorCell(cell){
 
 function getFreeCell(cell){
 	var row = fieldStatus.length-1;
+	// var row = $(cell).data("row");
 	var col = $(cell).data("col");
-	for(i = 0; i <= 2; i++){
+	for(i = 0; i <= fieldStatus.length-1; i++){
 		if(fieldStatus[row][col] === "filled"){
 			row = row - 1;
 		}
 	}
 	return "#box"+row+col;
+	// return "#box00";
+}
+
+function checkConditions(){
+	turn.changeTurn();
 }
 
 $(document).ready(function() {
@@ -54,10 +60,11 @@ $(document).ready(function() {
 	}, function(){
 		$(freeCell).removeClass("hover");
 	}); // End hover
-
 	$(".cell").click(function(){
 		colorCell(freeCell);
-		turn.changeTurn();
+		checkConditions();
+		freeCell = getFreeCell(this);	// Ensures hovering shows up after playing a piece
+		$(freeCell).addClass("hover");
 	});
 })
 
