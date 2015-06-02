@@ -48,23 +48,37 @@ function getFreeCell(cell){
 	// return "#box00";
 }
 
-function checkConditions(){
+function checkConditions(){	// Check if anyone has won, and if not, keep playing
 	turn.changeTurn();
+}
+
+function hoverEffect(freeCell){
+	if(turn.getCurrentPlayer() === 1){
+			$(freeCell).addClass("hoverPlayerOne");	// Figure out how to highlight bottom-most cell of each column
+		}
+	else {
+		$(freeCell).addClass("hoverPlayerTwo");
+	}
 }
 
 $(document).ready(function() {
 	var freeCell;
 	$(".cell").hover(function () {
-		freeCell = getFreeCell(this);
-		$(freeCell).addClass("hover");	// Figure out how to highlight bottom-most cell of each column
+		freeCell = getFreeCell(this);	
+		hoverEffect(freeCell);
 	}, function(){
-		$(freeCell).removeClass("hover");
+		if(turn.getCurrentPlayer() === 1){
+			$(freeCell).removeClass("hoverPlayerOne");	// Figure out how to highlight bottom-most cell of each column
+		}
+		else {
+			$(freeCell).removeClass("hoverPlayerTwo");
+		}
 	}); // End hover
 	$(".cell").click(function(){
 		colorCell(freeCell);
 		checkConditions();
 		freeCell = getFreeCell(this);	// Ensures hovering shows up after playing a piece
-		$(freeCell).addClass("hover");
+		hoverEffect(freeCell);
 	});
 })
 

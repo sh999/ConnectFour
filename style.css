@@ -5,8 +5,12 @@
 	border-radius: 100px;
 }
 
-.hover {
-	background-color: #aaa;
+.hoverPlayerOne {
+	background-color: #FF9999;
+}
+
+.hoverPlayerTwo {
+	background-color: #99CCFF;
 }
 
 .red {
