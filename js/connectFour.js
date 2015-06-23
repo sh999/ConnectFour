@@ -27,12 +27,14 @@ function colorCell(cell){
 	var col = $(cell).data("col");
 	if (turn.getCurrentPlayer() === 1){
 		$(cell).addClass("red");
+		fieldStatus[row][col] = "red";
 	}
 	else{
 		$(cell).addClass("blue");
+		fieldStatus[row][col] = "blue";
 	}
 	$(cell).addClass("clicked");	// Figure out how to drop piece in correct cell
-	fieldStatus[row][col] = "filled";
+	// fieldStatus[row][col] = "filled";
 }
 
 function getFreeCell(cell){
@@ -40,14 +42,14 @@ function getFreeCell(cell){
 	// var row = $(cell).data("row");
 	var col = $(cell).data("col");
 	for(i = 0; i <= fieldStatus.length-1; i++){
-		if(fieldStatus[row][col] === "filled"){
+		if(fieldStatus[row][col] === "red" || fieldStatus[row][col] === "blue"){
 			row = row - 1;
 		}
 	}
 	return "#box"+row+col;
 }
 
-function checkDown(pR, pC, len){	// Check how many consecutive pieces is below the placed piece
+function checkDown(pR, pC, len, p){	// Check how many consecutive pieces is below the placed piece
 	var cursorRow = pR;
 	var cursorCol = pC;
 	var limit = len
@@ -55,7 +57,13 @@ function checkDown(pR, pC, len){	// Check how many consecutive pieces is below t
 	var keepLooping = true;
 	var consec = 1;
 	var checkedCol = cursorCol;
-
+	var player;
+	if(p === 1){ 
+		player = "red";
+	}
+	else{
+		player = "blue";
+	}
 	while (keepLooping === true){
 		if(cursorRow == limit-1){	// If piece is at bottom don't keep checking
 			keepLooping = false;
@@ -63,15 +71,16 @@ function checkDown(pR, pC, len){	// Check how many consecutive pieces is below t
 		}
 		else {
 			checkedRow = cursorRow + 1;  //	The first row that will be checked first will be the one below where piece was placed
-			if(fieldStatus[checkedRow][checkedCol] == "filled"){
+			if(fieldStatus[checkedRow][checkedCol] == player){
 				consec += 1;
 				cursorRow += 1;
 			}
+			else{
+				keepLooping = false;
+			}
 		}
 	}
-
-	 // = pC;		// The first column that will be checked first will be the same one where piece was placed
-
+	// = pC;		// The first column that will be checked first will be the same one where piece was placed
 	$("#generalLog").text("checked Row = " + checkedRow + " checked Col = " + checkedCol);
 	return consec;
 }
@@ -84,32 +93,9 @@ function checkConditions(cell){	// Check if anyone has won, and if not, keep pla
 	// Check consecutive pieces under
 	var keepLooping = false;
 	var consecutive = 0;
-
-	
-	consecutive = checkDown(placedRow, placedCol, fieldStatus.length);
-	while(keepLooping === true){
-		
-		if(placedRow == fieldStatus.length-1){	// If dropped piece is at bottom
-			keepLooping = false;
-		}
-		else{
-			checkDown(placedRow, placedCol, fieldStatus.length);
-		}
-		testCell = "#box"+placedRow+placedCol;
-		/*
-		//Something is keeping the loop too long here
-		
-		if(fieldStatus[r][c] === "filled"){
-			// consecutive = consecutive + 1;
-		}
-		else{
-
-		} 	 	
-		*/
-	}
+	consecutive = checkDown(placedRow, placedCol, fieldStatus.length, turn.getCurrentPlayer());
 	$("#logEndLoop").text("looping end");
 	$("#logPlacement").text("placement = " +placedRow+" "+placedCol + " " + ", consecutive = " + consecutive + "field length = " + fieldStatus.length);
-	
 	turn.changeTurn();
 }
 
