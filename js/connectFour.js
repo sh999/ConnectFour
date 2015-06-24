@@ -49,30 +49,33 @@ function getFreeCell(cell){
 	return "#box"+row+col;
 }
 
-function checkDown(pR, pC, len, p){	// Check how many consecutive pieces is below the placed piece
-	var cursorRow = pR;
-	var cursorCol = pC;
-	var limit = len
-	var checkedRow;
+function checkDown(_cursorRow, _cursorCol, _limit, _player, checkingDirection){	// Returns how many consecutive pieces is below the placed piece
+	var cursorRow = _cursorRow;
+	var cursorCol = _cursorCol;
+	var limit = _limit;
 	var keepLooping = true;
-	var consec = 1;
-	var checkedCol = cursorCol;
+	var consecutive = 1;
 	var player;
-	if(p === 1){ 
+	var directionRow = checkingDirection[0];	// Planning to generalize checking function by giving direction of checking to prevent copying of this function for all the different directions
+	var directionCol = checkingDirection[1];
+	var checkedRow;
+	var checkedCol = cursorCol;
+
+	if(_player === 1){ 
 		player = "red";
 	}
 	else{
 		player = "blue";
 	}
-	while (keepLooping === true){
+	while(keepLooping === true){
 		if(cursorRow == limit-1){	// If piece is at bottom don't keep checking
 			keepLooping = false;
-			return consec;
+			return consecutive;	// Returns default value 1
 		}
 		else {
 			checkedRow = cursorRow + 1;  //	The first row that will be checked first will be the one below where piece was placed
 			if(fieldStatus[checkedRow][checkedCol] == player){
-				consec += 1;
+				consecutive += 1;
 				cursorRow += 1;
 			}
 			else{
@@ -80,9 +83,8 @@ function checkDown(pR, pC, len, p){	// Check how many consecutive pieces is belo
 			}
 		}
 	}
-	// = pC;		// The first column that will be checked first will be the same one where piece was placed
 	$("#generalLog").text("checked Row = " + checkedRow + " checked Col = " + checkedCol);
-	return consec;
+	return consecutive;
 }
 
 function checkConditions(cell){	// Check if anyone has won, and if not, keep playing
@@ -92,17 +94,17 @@ function checkConditions(cell){	// Check if anyone has won, and if not, keep pla
 	var checkedCol = placedCol;	// The first column that will be checked first will be the same one where piece was placed
 	// Check consecutive pieces under
 	var keepLooping = false;
-	var consecutive = 0;
-	consecutive = checkDown(placedRow, placedCol, fieldStatus.length, turn.getCurrentPlayer());
+	var consecutiveDown = 0;
+	consecutiveDown = checkDown(placedRow, placedCol, fieldStatus.length, turn.getCurrentPlayer(), [1,0]);
 	$("#logEndLoop").text("looping end");
-	$("#logPlacement").text("placement = " +placedRow+" "+placedCol + " " + ", consecutive = " + consecutive + "field length = " + fieldStatus.length);
+	$("#logPlacement").text("placement = " +placedRow+" "+placedCol + " " + ", consecutiveDown = " + consecutiveDown + "field length = " + fieldStatus.length);
 	turn.changeTurn();
 }
 
 function hoverEffect(freeCell){
 	if(turn.getCurrentPlayer() === 1){
-			$(freeCell).addClass("hoverPlayerOne");	// Figure out how to highlight bottom-most cell of each column
-		}
+		$(freeCell).addClass("hoverPlayerOne");	// Figure out how to highlight bottom-most cell of each column
+	}
 	else {
 		$(freeCell).addClass("hoverPlayerTwo");
 	}
