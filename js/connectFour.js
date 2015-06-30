@@ -50,7 +50,7 @@ function getFreeCell(cell){
 	return "#box"+row+col;
 }
 
-function checkDown(_cursorRow, _cursorCol, _rowMaxLimit, _colMaxLimit, _player, checkingDirection){	// Returns how many consecutive pieces is below the placed piece
+function checkConsecutive(_cursorRow, _cursorCol, _rowMaxLimit, _colMaxLimit, _player, checkingDirection){	// Returns how many consecutive pieces is below the placed piece
 	var cursorRow = _cursorRow;
 	var cursorCol = _cursorCol;
 	var rowMaxLimit = _rowMaxLimit-1;
@@ -61,7 +61,6 @@ function checkDown(_cursorRow, _cursorCol, _rowMaxLimit, _colMaxLimit, _player, 
 	var checkDirectionRow = checkingDirection[0];	// Planning to generalize checking function by giving direction of checking to prevent copying of this function for all the different directions
 	var checkDirectionCol = checkingDirection[1];
 	var checkedRow = cursorRow + checkDirectionRow;
-	var checkedRow;
 	var checkedCol = cursorCol + checkDirectionCol;
 	if(_player === 1){ 
 		player = "red";
@@ -70,7 +69,7 @@ function checkDown(_cursorRow, _cursorCol, _rowMaxLimit, _colMaxLimit, _player, 
 		player = "blue";
 	}
 	while(keepLooping === true){
-		if(checkedRow > rowMaxLimit){	// If piece is at bottom don't keep checking
+		if((checkedRow > rowMaxLimit)||(checkedCol > colMaxLimit)){	// If piece is at bottom don't keep checking
 			keepLooping = false;
 			return consecutive;	// Returns default value 1
 		}
@@ -78,12 +77,14 @@ function checkDown(_cursorRow, _cursorCol, _rowMaxLimit, _colMaxLimit, _player, 
 			if(fieldStatus[checkedRow][checkedCol] == player){
 				consecutive += 1;
 				cursorRow += checkDirectionRow;
+				cursorCol += checkDirectionCol;
 			}
 			else{
 				keepLooping = false;
 			}
 		}
 		checkedRow = checkedRow + checkDirectionRow;
+		checkedCol = checkedCol + checkDirectionCol;
 	}
 	$("#generalLog").text("checked Row = " + checkedRow + " checked Col = " + checkedCol);
 	return consecutive;
@@ -97,10 +98,13 @@ function checkConditions(cell){	// Check if anyone has won, and if not, keep pla
 	// Check consecutive pieces under
 	var keepLooping = false;
 	var consecutiveDown = 0;
-	consecutiveDown = checkDown(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [1,0]);
+	var consecutiveRight = 0;
+	consecutiveDown = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [1,0]);
+	consecutiveRight = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [0,1]);
 	$("#logEndLoop").text("looping end");
 	$("#logPlacement").text("placement = " +placedRow+" "+placedCol + " " + "field length = " + fieldStatus.length);
 	$("#logCheckDown").text("consecutive Down = " + consecutiveDown);
+	$("#logCheckRight").text("consecutive Right = " + consecutiveRight);
 	turn.changeTurn();
 }
 
