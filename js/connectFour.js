@@ -69,7 +69,8 @@ function checkConsecutive(_cursorRow, _cursorCol, _rowMaxLimit, _colMaxLimit, _p
 		player = "blue";
 	}
 	while(keepLooping === true){
-		if((checkedRow > rowMaxLimit)||(checkedCol > colMaxLimit)){	// If piece is at bottom don't keep checking
+		if((checkedRow > rowMaxLimit)||(checkedCol > colMaxLimit)
+		 ||(checkedRow < 0) || (checkedCol < 0)){	// If piece is at bottom don't keep checking
 			keepLooping = false;
 			return consecutive;	// Returns default value 1
 		}
@@ -95,16 +96,25 @@ function checkConditions(cell){	// Check if anyone has won, and if not, keep pla
 	var placedCol = $(cell).data("col");
 	var checkedRow = placedRow + 1; //	The first row that will be checked first will be the one below where piece was placed
 	var checkedCol = placedCol;	// The first column that will be checked first will be the same one where piece was placed
-	// Check consecutive pieces under
 	var keepLooping = false;
 	var consecutiveDown = 0;
 	var consecutiveRight = 0;
+	var consecutiveUpRight = 0;
+	var consecutiveDownRight = 0;
+	var consecutiveDownLeft = 0;
+	var consecutiveUpLeft = 0;
+	var consecutiveLeft = 0;
 	consecutiveDown = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [1,0]);
+	consecutiveDownRight = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [1,1]);
 	consecutiveRight = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [0,1]);
+	consecutiveUpRight = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [-1,1]);
+	consecutiveLeft = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [0,-1]);
+	consecutiveDownLeft = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [1,-1]);
+	consecutiveUpLeft = checkConsecutive(placedRow, placedCol, fieldStatus.length, fieldStatus[0].length, turn.getCurrentPlayer(), [-1,-1]);
 	$("#logEndLoop").text("looping end");
 	$("#logPlacement").text("placement = " +placedRow+" "+placedCol + " " + "field length = " + fieldStatus.length);
-	$("#logCheckDown").text("consecutive Down = " + consecutiveDown);
-	$("#logCheckRight").text("consecutive Right = " + consecutiveRight);
+	$("#logCheckConsecutive").text("consecutive down = " + consecutiveDown + ", right = " + consecutiveRight + ", down-right = " + consecutiveDownRight + ", up-right = " + consecutiveUpRight
+		+ ", UpLeft = " + consecutiveUpLeft + ", Left = " + consecutiveLeft + ", down left = " + consecutiveDownLeft);
 	turn.changeTurn();
 }
 
