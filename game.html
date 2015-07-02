@@ -1,18 +1,11 @@
 <html>
-<head>Connect Four</head>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<script type="text/javascript" src="js/connectFour.js"></script>
 	<link href="http://fonts.googleapis.com/css?family=Finger+Paint" rel='stylesheet' type='text/css'>
 	<link rel='stylesheet' type='text/css' href='style.css'>
 </html>
 <body>
-	<p id="generalLog"></p>
-	<p id="logLoop"> </p>
-	<p id="logEndLoop"> </p>
-	<p id="logPlacement"> </p>
-	<p id="logCheckConsecutive"> </p>
-	<p id="logCheckDown"> </p>
-	<p id="logCheckRight"> </p>
+	<p id="logCheckConsecutive"></p>
 	<div id="main-container">
 		<h1 id="main-header" class="h">Connect Four</h1>
 			<table>
@@ -71,8 +64,7 @@
 						<td id="box55" class="cell" data-row="5" data-col="5"></td>
 						<td id="box56" class="cell" data-row="5" data-col="6"></td>
 					</tr>
-
 				</tbody>
-			</table>
+			</table><p id="winningMessage"></p>
 	</div>
 </body>
